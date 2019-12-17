@@ -1,0 +1,17 @@
+[Unit]
+Description=Site/Webserver for jbovlaste
+Requires=jbovlaste_database.service
+
+[Service]
+Restart=always
+#Environment="CONTAINER_BIN=/usr/bin/docker"
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=jbovlaste_site
+WorkingDirectory=/home/sampre_jvs/jbovlaste
+ExecStart=/bin/bash -x /home/sampre_jvs/jbovlaste/run_site.sh 2>&1
+ExecStop=/bin/bash -x /home/sampre_jvs/jbovlaste/kill_site.sh 2>&1
+TimeoutStartSec=10min
+
+[Install]
+WantedBy=default.target
