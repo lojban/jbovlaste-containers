@@ -1,0 +1,65 @@
+<%= "\n"*30 %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+<%= "# YOU ARE IN THE WRONG PLACE use the ERB file" %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+
+FROM fedora:31
+
+RUN dnf -y install --best --allowerasing httpd findutils
+RUN dnf -y install --best --allowerasing curl wget w3m vim vim-minimal git
+
+# jbovlaste stuff
+RUN dnf -y install --best --allowerasing mod_perl postgresql perl-Algorithm-Diff perl-Apache-DBI \
+    perl-Captcha-reCAPTCHA perl-Compress-Zlib perl-Crypt-Blowfish \
+    perl-Crypt-CBC perl-DBD-Pg perl-DBI perl-Data-Dumper perl-Digest-MD5 \
+    perl-Email-MIME perl-Email-Sender perl-Email-Simple perl-Email-Valid \
+    perl-Encode perl-Exporter perl-File-Path perl-File-Slurp perl-File-Temp \
+    perl-Getopt-Long perl-HTML-Mason perl-LWP-Protocol-https \
+    perl-List-MoreUtils perl-MIME-Base64 perl-Socket perl-String-Approx \
+    perl-Text-Soundex perl-Unicode-String
+# Needed for dict.pl that does dict lookups.
+RUN dnf -y install --best --allowerasing dictd
+# jbovlaste latex stuff
+RUN dnf -y install --best --allowerasing latex2html liberation-mono-fonts liberation-fonts-common
+RUN dnf -y install --best --allowerasing linux-libertine-fonts linux-libertine-biolinum-fonts texlive-collection-xetex texlive-xetex texlive-polyglossia texlive-fancyhdr texlive-courier texlive-courier-scaled
+RUN dnf -y install --best --allowerasing texlive-libertine texlive-fontspec texlive-underscore texlive-xetex-def texlive-euenc texlive-xltxtra
+
+RUN rm /etc/httpd/conf.d/welcome.conf
+
+# Make the web user match the userid of the running user; makes things way easier
+RUN usermod -u <%= userid %> apache
+RUN groupmod -g <%= groupid %> apache
+RUN find / -xdev -user 48 -print0 | xargs -0 chown apache
+RUN find / -xdev -group 48 -print0 | xargs -0 chgrp apache
+
+# Running rootless means no port 80 *in* the container
+RUN sed -i 's/^Listen 80$/Listen 8380/' /etc/httpd/conf/httpd.conf
+
+# We're really, actually running as the running user's userid
+RUN find /etc/http* /var/log/http* -print0 | xargs -0 chown apache:apache
+
+RUN mkdir /tmp/jbovlaste_export ; chown apache:apache /tmp/jbovlaste_export ; chmod 755 /tmp/jbovlaste_export
+RUN mkdir /tmp/jbovlaste_export/.fonts ; chown apache:apache /tmp/jbovlaste_export/.fonts ; chmod 755 /tmp/jbovlaste_export/.fonts
+
+# Set up camxes-py, which we use to get vlatai
+RUN yum -y install python3-pip
+RUN pip3 install parsimonious==0.8.1
+
+# Mail sending support
+RUN yum -y install ssmtp
+
+RUN yum clean all
+
+# COPY at the end as they never seem to cache
+
+# Mail sending support
+COPY misc/ssmtp.conf /etc/ssmtp/ssmtp.conf
+
+# Special fonts
+COPY misc/unifont.ttf /usr/share/fonts/unifont.ttf
+COPY misc/CODE2000.TTF /usr/share/fonts/CODE2000.TTF
+
+# Do this last as podman seems to never cache this step?
+COPY misc/httpd_jbovlaste.conf /etc/httpd/conf.d/jbovlaste.conf
+COPY misc/httpd_jbovlaste_perl.conf /srv/jbovlaste/jbovlaste_perl.conf
+

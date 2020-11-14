@@ -1,0 +1,25 @@
+# Vim
+[._]*.sw[a-p]
+*~
+
+# helps ripgrep not be silly
+.git
+
+# ERB result files
+cron/crontab
+containers/db/Dockerfile
+containers/web/Dockerfile
+containers/web/src/bin/db.sh
+containers/web/src/lib/db.pm
+misc/pgpass
+misc/ssmtp.conf
+containers/jiten/Dockerfile
+containers/jiten/src/jiten.conf
+
+# Don't check in secrets
+secrets
+
+# Sub-gits and data files
+containers/db/data/
+containers/jiten/src/
+containers/web/src/

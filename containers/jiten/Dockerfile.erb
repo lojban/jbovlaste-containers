@@ -1,0 +1,19 @@
+<%= "\n"*30 %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+<%= "# YOU ARE IN THE WRONG PLACE use the ERB file" %>
+<%= "# YOU ARE IN THE WRONG PLACE" %>
+
+FROM fedora:31
+
+RUN dnf -y install --best --allowerasing httpd findutils
+RUN dnf -y install --best --allowerasing curl wget w3m vim vim-minimal git
+
+# jiten stuff
+RUN dnf -y install --best --allowerasing perl-DBD-Pg perl-HTML-Mason perl-Unicode-String perl-String-Approx postgresql dictd
+
+RUN yum clean all
+
+# Make the web user match the userid of the running user; makes things way easier
+RUN useradd -u <%= userid %> jiten
+
+WORKDIR /srv/jiten

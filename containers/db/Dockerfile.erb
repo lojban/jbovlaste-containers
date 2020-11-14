@@ -1,0 +1,21 @@
+# https://hub.docker.com/_/postgres
+FROM postgres:10
+
+RUN usermod -u <%= userid %> postgres
+RUN find / -xdev -user 999 -print0 | xargs -0 chown postgres
+RUN find / -xdev -user 999 -ls
+RUN groupmod -g <%= groupid %> postgres
+RUN find / -xdev -group 999 -print0 | xargs -0 chgrp postgres
+RUN find / -xdev -group 999 -ls
+
+# Stop having to type the password all the time
+COPY misc/pgpass /root/.pgpass
+COPY misc/pgpass /.pgpass
+COPY misc/pgpass /var/lib/postgresql/.pgpass
+RUN chmod 400 /root/.pgpass /.pgpass /var/lib/postgresql/.pgpass
+
+# Backups
+COPY misc/pgbackup.sh /usr/local/bin/pgbackup.sh
+RUN chmod 755 /usr/local/bin/pgbackup.sh
+
+USER postgres

@@ -1,8 +1,0 @@
-FROM mariadb:10.4
-
-RUN usermod -u 1085 mysql
-RUN find / -xdev -user 999 -print0 | xargs -0 chown mysql
-RUN groupmod -g 1085 mysql
-RUN find / -xdev -group 999 -print0 | xargs -0 chgrp mysql
-
-USER mysql

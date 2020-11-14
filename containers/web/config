@@ -1,0 +1,8 @@
+description="Web Service For jbovlaste"
+requires=jvs-db.service
+# Keeping it short so it's obvious what this is even in short fields
+name=jvs-web
+version=1
+run_args='-v $containerdir/src:/srv/jbovlaste/current'
+run_program='/usr/sbin/httpd -DFOREGROUND'
+files_to_erb_on_run='containers/web/src/bin/db.sh containers/web/src/lib/db.pm'
