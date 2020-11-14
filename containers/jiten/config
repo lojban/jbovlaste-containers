@@ -3,5 +3,4 @@ requires=jvs-web.service
 name=jiten
 version=1
 run_args='-v $containerdir/src:/srv/jiten'
-run_program='/srv/jiten/jiten'
-files_to_erb_on_run='containers/jiten/src/jiten.conf'
+run_program='/srv/jiten/jiten -f /home/jiten/jiten.conf'

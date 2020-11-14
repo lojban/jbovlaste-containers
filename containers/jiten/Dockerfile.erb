@@ -16,4 +16,6 @@ RUN yum clean all
 # Make the web user match the userid of the running user; makes things way easier
 RUN useradd -u <%= userid %> jiten
 
+COPY misc/jiten.conf /home/jiten/jiten.conf
+
 WORKDIR /srv/jiten

@@ -13,6 +13,7 @@ containers/web/src/bin/db.sh
 containers/web/src/lib/db.pm
 misc/pgpass
 misc/ssmtp.conf
+misc/jiten.conf
 containers/jiten/Dockerfile
 containers/jiten/src/jiten.conf
 
