@@ -1,5 +1,6 @@
-description="DICT Rrotocol Service For jbovlaste"
-requires=jvs-web.service
+description="DICT Protocol Service For jbovlaste"
+after_containers='jvs-web jvs-db'
+needs_network=true
 name=jiten
 version=1
 run_args='-v $containerdir/src:/srv/jiten'
