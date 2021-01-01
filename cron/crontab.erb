@@ -21,3 +21,6 @@ LANG=en_US.UTF-8
 
 # Clean up exports as they can grow quite large
 9 9 * * * <%= maindir %>/cron/cron-run-inside.sh jvs-web /srv/jbovlaste/current/bin/exports_cleanup.sh
+
+# Rebuild images every once in a while so we don't have surprises after a reboot of the host
+17 */5 * * * <%= maindir %>/rebuild_images.sh
