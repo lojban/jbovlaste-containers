@@ -1,5 +1,5 @@
 description="DB Service For jbovlaste"
 needs_network=true
-name=jvs-db
+name=db
 version=1
 run_args='-v $containerdir/data:/var/lib/postgresql/data -e POSTGRES_PASSWORD=$postgres_password'

@@ -1,5 +1,5 @@
 description="DICT Protocol Service For jbovlaste"
-after_containers='jvs-web jvs-db'
+after_containers='web db'
 needs_network=true
 name=jiten
 version=1

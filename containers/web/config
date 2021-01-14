@@ -1,8 +1,8 @@
 description="Web Service For jbovlaste"
-after_containers=jvs-db
+after_containers=db
 needs_network=true
 # Keeping it short so it's obvious what this is even in short fields
-name=jvs-web
+name=web
 version=1
 run_args='-v $containerdir/src:/srv/jbovlaste/current'
 run_program='/usr/sbin/httpd -DFOREGROUND'
