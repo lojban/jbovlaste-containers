@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/postgres
-FROM postgres:10
+FROM docker.io/library/postgres:13
 
 RUN usermod -u <%= userid %> postgres
 RUN find / -xdev -user 999 -print0 | xargs -0 chown postgres
