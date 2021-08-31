@@ -3,9 +3,15 @@
 <%= "# YOU ARE IN THE WRONG PLACE use the ERB file" %>
 <%= "# YOU ARE IN THE WRONG PLACE" %>
 
-FROM fedora:34
+# WARNING: DO NOT upgrade past Fedora 32 until https://github.com/Perl/perl5/issues/18238 is fixed; the issue is very very loud and annoying.
+# When you do upgrade, add these to the package list: perl-Tie-RefHash perl-Sys-Hostname
+FROM fedora:32
 
-RUN dnf -y install --best --allowerasing httpd findutils curl wget w3m vim vim-minimal git perl-DBD-Pg perl-Tie-RefHash perl-HTML-Mason perl-Unicode-String perl-String-Approx perl-Sys-Hostname postgresql dictd && dnf clean all
+RUN dnf -y install --best --allowerasing httpd findutils curl wget w3m vim vim-minimal git perl-DBD-Pg perl-HTML-Mason perl-Unicode-String perl-String-Approx postgresql dictd && yum clean all
+# Also needed for Fedora 33/34: perl-Tie-RefHash perl-Sys-Hostname 
+
+# jiten stuff
+
 
 # Make the web user match the userid of the running user; makes things way easier
 RUN useradd -u <%= userid %> jiten
