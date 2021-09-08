@@ -1,2 +1,2 @@
-service=jbovlaste
+bundle=jbovlaste
 pod_args='-p 8380:8380 -p 2628:2628'
