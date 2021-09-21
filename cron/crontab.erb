@@ -32,7 +32,7 @@ LANG=en_US.UTF-8
 32 */8 * * * systemctl --user restart web
 
 # Daily backups
-2 2 * * * <%= maindir %>/self_backup.sh zh1785@zh1785.rsync.net '+%j'
+2 2 * * * <%= maindir %>/self_backup.sh zh1785@zh1785.rsync.net '+\%j'
 
 # Daily restore test
 3 3 * * * <%= maindir %>/self_restore_test.sh zh1785@zh1785.rsync.net webmaster@lojban.org
