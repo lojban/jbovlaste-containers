@@ -1,2 +1,2 @@
 bundle=jbovlaste
-pod_args='-p 8380:8380 -p 2628:2628'
+pod_args='-p 15080:8080 -p 15028:2628'
