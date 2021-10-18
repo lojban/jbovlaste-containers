@@ -5,24 +5,28 @@
 
 FROM fedora:34
 
-RUN dnf -y install --best --allowerasing httpd findutils
-RUN dnf -y install --best --allowerasing curl wget w3m vim vim-minimal git
-
-# jbovlaste stuff
-RUN dnf -y install --best --allowerasing mod_perl postgresql perl-Algorithm-Diff perl-Apache-DBI \
+# All in one batch because otherwise you can end up with crazy
+# behaviours when things get updated "between" Docker's dnf/yum runs
+RUN dnf -y update && \
+    dnf -y install --best --allowerasing httpd findutils && \
+    dnf -y install --best --allowerasing curl wget w3m vim vim-minimal git python3-pip ssmtp && \
+# jbovlaste stuff \
+    dnf -y install --best --allowerasing mod_perl postgresql perl-Algorithm-Diff perl-Apache-DBI \
     perl-Captcha-reCAPTCHA perl-Compress-Zlib perl-Crypt-Blowfish \
     perl-Crypt-CBC perl-DBD-Pg perl-DBI perl-Data-Dumper perl-Digest-MD5 \
     perl-Email-MIME perl-Email-Sender perl-Email-Simple perl-Email-Valid \
     perl-Encode perl-Exporter perl-File-Path perl-File-Slurp perl-File-Temp \
     perl-Getopt-Long perl-HTML-Mason perl-LWP-Protocol-https \
     perl-List-MoreUtils perl-MIME-Base64 perl-Socket perl-String-Approx \
-    perl-Text-Soundex perl-Unicode-String
-# Needed for dict.pl that does dict lookups.
-RUN dnf -y install --best --allowerasing dictd
-# jbovlaste latex stuff
-RUN dnf -y install --best --allowerasing latex2html liberation-mono-fonts liberation-fonts-common
-RUN dnf -y install --best --allowerasing linux-libertine-fonts linux-libertine-biolinum-fonts texlive-collection-xetex texlive-xetex texlive-polyglossia texlive-fancyhdr texlive-courier texlive-courier-scaled
-RUN dnf -y install --best --allowerasing texlive-libertine texlive-fontspec texlive-underscore texlive-xetex-def texlive-euenc texlive-xltxtra
+    perl-Text-Soundex perl-Unicode-String && \
+# Needed for dict.pl that does dict lookups. \
+    dnf -y install --best --allowerasing dictd && \
+# jbovlaste latex stuff \
+    dnf -y install --best --allowerasing latex2html liberation-mono-fonts liberation-fonts-common && \
+    dnf -y install --best --allowerasing linux-libertine-fonts linux-libertine-biolinum-fonts texlive-collection-xetex texlive-xetex texlive-polyglossia texlive-fancyhdr texlive-courier texlive-courier-scaled && \
+    dnf -y install --best --allowerasing texlive-libertine texlive-fontspec texlive-underscore texlive-xetex-def texlive-euenc texlive-xltxtra && \
+
+    dnf clean all
 
 RUN rm /etc/httpd/conf.d/welcome.conf
 
@@ -42,13 +46,7 @@ RUN mkdir /tmp/jbovlaste_export ; chown apache:apache /tmp/jbovlaste_export ; ch
 RUN mkdir /tmp/jbovlaste_export/.fonts ; chown apache:apache /tmp/jbovlaste_export/.fonts ; chmod 755 /tmp/jbovlaste_export/.fonts
 
 # Set up camxes-py, which we use to get vlatai
-RUN yum -y install python3-pip
-RUN pip3 install parsimonious==0.8.1
-
-# Mail sending support
-RUN yum -y install ssmtp
-
-RUN yum clean all
+RUN pip3 install --upgrade git+https://github.com/lojban/camxes-py.git@v0.10.0
 
 # COPY at the end as they never seem to cache
 
@@ -62,4 +60,3 @@ COPY misc/CODE2000.TTF /usr/share/fonts/CODE2000.TTF
 # Do this last as podman seems to never cache this step?
 COPY misc/httpd_jbovlaste.conf /etc/httpd/conf.d/jbovlaste.conf
 COPY misc/httpd_jbovlaste_perl.conf /srv/jbovlaste/jbovlaste_perl.conf
-
