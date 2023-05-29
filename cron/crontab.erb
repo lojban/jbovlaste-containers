@@ -20,22 +20,22 @@ LANG=en_US.UTF-8
 # 7 7 * * 7 <%= maindir %>/cron/cron-run-inside.sh web /var/www/jbovlaste/current/bin/nlwconflicts
 
 # Dump a copy of the schema for people to try to develop against
-21 21 * * * <%= maindir %>/cron/cron-run-inside.sh web /srv/jbovlaste/current/bin/schema-dump.sh
+21 21 * * * <%= maindir %>/cron/cron-run-inside.sh web /srv/jbovlaste/current/bin/schema-dump.sh 2>&1 | fold -w 300
 
 # Clean up exports as they can grow quite large
 9 9 * * * <%= maindir %>/cron/cron-run-inside.sh web /srv/jbovlaste/current/bin/exports_cleanup.sh
 
 # Rebuild images every once in a while so we don't have surprises after a reboot of the host
-17 */5 * * * <%= maindir %>/rebuild_images.sh
+17 */5 * * * <%= maindir %>/rebuild_images.sh 2>&1 | fold -w 300
 
 # jbovlaste's httpd processes get *REALLY* memory hoggy after a while
 32 */8 * * * systemctl --user restart web
 
 # Daily backups; 7 day retention
-2 2 * * * <%= maindir %>/self_backup.sh zh1785@zh1785.rsync.net '+day-\%w'
+2 2 * * * <%= maindir %>/self_backup.sh zh1785@zh1785.rsync.net '+day-\%w' 2>&1 | fold -w 300
 
 # Weekly backups; 52 week retention
-3 3 * * * <%= maindir %>/self_backup.sh zh1785@zh1785.rsync.net '+week-\%W'
+3 3 * * * <%= maindir %>/self_backup.sh zh1785@zh1785.rsync.net '+week-\%W' 2>&1 | fold -w 300
 
 # Daily restore test
-4 4 * * * <%= maindir %>/self_restore_test.sh zh1785@zh1785.rsync.net webmaster@lojban.org
+4 4 * * * <%= maindir %>/self_restore_test.sh zh1785@zh1785.rsync.net webmaster@lojban.org 2>&1 | fold -w 300
